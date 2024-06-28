@@ -13,25 +13,38 @@ import {
     useMediaQuery,
     useTheme
 } from '@mui/material';
-import { ExpandLess, ExpandMore, Inbox, Mail } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { Link, useLocation } from 'react-router-dom';
 import logo from '../../logo.svg'; // Adjust the path as necessary
+import menuConfig from '../layouts/routes'; // Import the menu configuration
 
 const CustomDrawer = ({ open, onClose }) => {
     const theme = useTheme();
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
+    const location = useLocation();
 
-    const handleDrawerItemClick = () => {
-        if (!isLargeScreen) {
-            onClose();
+    const handleDrawerItemClick = (hasChildren) => {
+        console.log(hasChildren)
+        if (!isLargeScreen && !hasChildren) {
+            onClose(); // Close the drawer on small screens or if the item doesn't have children
         }
     };
 
-    const [openStudents, setOpenStudents] = useState(false);
+    const [openMenu, setOpenMenu] = useState({});
 
-    const handleStudentsClick = () => {
-        setOpenStudents(!openStudents);
+    const handleMenuClick = (menuTitle) => {
+        setOpenMenu((prevState) => ({
+            ...Object.fromEntries(
+                Object.entries(prevState).map(([key, value]) => [key, key === menuTitle ? !value : false])
+            ),
+            [menuTitle]: !prevState[menuTitle],
+        }));
     };
+
+    const currentPath = location.pathname;
+    const shouldHideAppBar = menuConfig.some(menu =>
+        menu.path === currentPath || menu.children.some(submenu => submenu.path === currentPath)
+    );
 
     return (
         <Drawer
@@ -42,7 +55,7 @@ const CustomDrawer = ({ open, onClose }) => {
                 '& .MuiDrawer-paper': {
                     boxSizing: 'border-box',
                     width: 240,
-                    marginTop: isLargeScreen ? 8 : 7, // Adjust marginTop to push the drawer below AppBar
+                    marginTop: isLargeScreen && !shouldHideAppBar ? 8 : 7, // Adjust marginTop to push the drawer below AppBar
                 },
             }}
         >
@@ -61,49 +74,50 @@ const CustomDrawer = ({ open, onClose }) => {
                 <Typography>Welcome Mr. Admin</Typography>
                 <Divider />
                 <List>
-                    <ListItem button component={Link} to="/dashboard">
-                        <ListItemIcon>
-                            <Inbox />
-                        </ListItemIcon>
-                        <ListItemText primary="Dashboard" />
-                    </ListItem>
-
-                    <ListItem button onClick={handleStudentsClick}>
-                        <ListItemIcon>
-                            <Inbox />
-                        </ListItemIcon>
-                        <ListItemText primary="Students" />
-                        {openStudents ? <ExpandLess /> : <ExpandMore />}
-                    </ListItem>
-                    <Collapse in={openStudents} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding>
-                            <ListItem button sx={{ pl: 4 }} component={Link} to="/students/list">
+                    {menuConfig.map(menu => (
+                        <React.Fragment key={menu.title}>
+                            <ListItem
+                                button
+                                component={menu.children.length > 0 ? 'div' : Link} // If it has children, use div, else Link
+                                to={menu.path}
+                                onClick={() => {
+                                    handleDrawerItemClick(menu.children.length > 0)
+                                    handleMenuClick(menu.title)
+                                }} // Pass if it has children
+                            >
                                 <ListItemIcon>
-                                    <Mail />
+                                    {menu.icon}
                                 </ListItemIcon>
-                                <ListItemText primary="List" />
+                                <ListItemText primary={menu.title} />
+                                {menu.children.length > 0 && (
+                                    openMenu[menu.title] ?
+                                        <ExpandLess /> :
+                                        <ExpandMore />
+                                )}
                             </ListItem>
-                            <ListItem button sx={{ pl: 4 }} component={Link} to="/students/attendance">
-                                <ListItemIcon>
-                                    <Mail />
-                                </ListItemIcon>
-                                <ListItemText primary="Attendance" />
-                            </ListItem>
-                        </List>
-                    </Collapse>
-
-                    <ListItem button component={Link} to="/account">
-                        <ListItemIcon>
-                            <Inbox />
-                        </ListItemIcon>
-                        <ListItemText primary="Account" />
-                    </ListItem>
-                    <ListItem button component={Link} to="/about">
-                        <ListItemIcon>
-                            <Inbox />
-                        </ListItemIcon>
-                        <ListItemText primary="About" />
-                    </ListItem>
+                            {menu.children.length > 0 && (
+                                <Collapse in={openMenu[menu.title]} timeout="auto" unmountOnExit>
+                                    <List component="div" disablePadding>
+                                        {menu.children.map(submenu => (
+                                            <ListItem
+                                                button
+                                                key={submenu.title}
+                                                sx={{ pl: 4 }}
+                                                component={Link}
+                                                to={submenu.path}
+                                                onClick={() => { handleDrawerItemClick(false) }}
+                                            >
+                                                <ListItemIcon>
+                                                    {submenu.icon}
+                                                </ListItemIcon>
+                                                <ListItemText primary={submenu.title} />
+                                            </ListItem>
+                                        ))}
+                                    </List>
+                                </Collapse>
+                            )}
+                        </React.Fragment>
+                    ))}
                 </List>
                 <Divider />
                 <Typography variant="body2" align="center" sx={{ mt: 2 }}>
@@ -112,5 +126,6 @@ const CustomDrawer = ({ open, onClose }) => {
             </Box>
         </Drawer>
     );
-}
+};
+
 export default CustomDrawer;
