@@ -15,8 +15,8 @@ import {
 } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Link, useLocation } from 'react-router-dom';
-import logo from '../../logo.svg'; // Adjust the path as necessary
-import menuConfig from '../layouts/routes'; // Import the menu configuration
+import logo from '../logo.svg'; // Adjust the path as necessary
+import menuConfig from './routes'; // Import the menu configuration
 
 const CustomDrawer = ({ open, onClose }) => {
     const theme = useTheme();

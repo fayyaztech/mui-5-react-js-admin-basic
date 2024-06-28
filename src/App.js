@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./screens/Login";
 import Dashboard from "./screens/Dashboard";
-import Template from "./screens/layouts/Template";
 import StudentList from "./screens/Student/StudentList";
+import Template from "./layouts/Template";
 
 
 function App() {
