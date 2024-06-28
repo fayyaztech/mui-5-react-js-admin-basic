@@ -6,7 +6,6 @@ import {
     Drawer,
     List,
     ListItem,
-    ListItemButton,
     ListItemIcon,
     ListItemText,
     Collapse,
@@ -16,7 +15,7 @@ import {
 } from '@mui/material';
 import { ExpandLess, ExpandMore, Inbox, Mail } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import logo from '../logo.svg'; // Adjust the path as necessary
+import logo from '../../logo.svg'; // Adjust the path as necessary
 
 const CustomDrawer = ({ open, onClose }) => {
     const theme = useTheme();
@@ -108,7 +107,7 @@ const CustomDrawer = ({ open, onClose }) => {
                 </List>
                 <Divider />
                 <Typography variant="body2" align="center" sx={{ mt: 2 }}>
-                    v 1.0.1 current
+                    v 1.0.0
                 </Typography>
             </Box>
         </Drawer>
