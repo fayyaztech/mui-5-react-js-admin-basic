@@ -92,7 +92,7 @@ export default function Template({ mainPage }) {
           component="main"
           sx={{
             flexGrow: 1,
-            p: 3,
+            p: 1,
             marginLeft: isLargeScreen ? '240px' : '0', // Add left margin when drawer is permanent
             transition: theme.transitions.create('margin', {
               easing: theme.transitions.easing.sharp,
