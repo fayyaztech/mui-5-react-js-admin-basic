@@ -6,7 +6,6 @@ import { AttachMoney, EventAvailable, People, School } from '@mui/icons-material
 export default function Dashboard() {
   return (
     <React.Fragment>
-
       <Grid container spacing={0}>
         <Grid xs={6} md={3}>
           <DashboardCard
