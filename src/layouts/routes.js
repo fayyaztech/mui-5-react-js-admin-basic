@@ -26,7 +26,7 @@ const menuConfig = [
         ]
     },
     {
-        title: "Demo",
+        title: "Accounts",
         path: "#",
         icon: <Inbox />,
         children: [
