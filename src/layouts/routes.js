@@ -1,5 +1,5 @@
 // menuConfig.js
-import { Inbox, Mail } from '@mui/icons-material';
+import { Inbox, Mail } from "@mui/icons-material";
 
 const menuConfig = [
     {
